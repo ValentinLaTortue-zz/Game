@@ -121,6 +121,7 @@ namespace ZeldaLike.GameUtility
         }
         public bool rotate;
 
+
         public Frame(Vector2 pos, Vector2 size, Vector2 pPos, bool rotate)
         {
             this.pos = pos;

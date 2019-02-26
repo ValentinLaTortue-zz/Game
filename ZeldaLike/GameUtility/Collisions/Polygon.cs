@@ -64,9 +64,8 @@ namespace ZeldaLike.GameUtility.Collisions
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            /*foreach (var seg in segments)
-                seg.Draw(spriteBatch);*/
-            segments[0].Draw(spriteBatch);
+            foreach (var seg in segments)
+                seg.Draw(spriteBatch);
         }
 
 
@@ -81,12 +80,15 @@ namespace ZeldaLike.GameUtility.Collisions
 
         public bool Intersect(Polygon poly)
         {
-            Console.WriteLine(poly.segments[0].ToString() + "   " + segments[0].ToString());
-            if (poly.segments[0].Intersect(segments[0]))
+            foreach(Segment segm1 in segments)
             {
-                return true;
+                foreach(Segment segm2 in poly.segments)
+                {
+                    if (segm1.Intersect(segm2))
+                        return true;
+                }
             }
-            else return false;
+            return false;
         }
     }
 
