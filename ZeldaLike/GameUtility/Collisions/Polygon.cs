@@ -75,6 +75,7 @@ namespace ZeldaLike.GameUtility.Collisions
 
         public Polygon(List<Vector2> relativePointsPosition)
         {
+            Console.WriteLine(relativePointsPosition.Count);
             initRelPos = relativePointsPosition;
         }
 
@@ -106,13 +107,15 @@ namespace ZeldaLike.GameUtility.Collisions
             var pivotPT = rect.Location.ToVector2() + new Vector2(rect.Width * pivot.X, rect.Height * pivot.Y);
 
             List<Vector2> points = new List<Vector2>();
-            List<Vector2> pointsFinal = new List<Vector2>();
-            points.Add(rect.Location.ToVector2() - pivot);
-            points.Add(rect.Location.ToVector2() + rect.Width * Vector2.UnitX - pivot);
-            points.Add(rect.Location.ToVector2() + rect.Width * Vector2.UnitX + rect.Height * Vector2.UnitY - pivot);
-            points.Add(rect.Location.ToVector2() + rect.Height * Vector2.UnitY - pivot);
-            var poly = new Polygon(pointsFinal);
+
+            points.Add(-pivot * rect.Size.ToVector2());
+            points.Add(-pivot * rect.Size.ToVector2() + rect.Width * Vector2.UnitX);
+            points.Add(-pivot * rect.Size.ToVector2() + rect.Height * Vector2.UnitY);
+            
+            var poly = new Polygon(points);
             poly.angle = Angle;
+            poly.position = rect.Location.ToVector2() + 0.5F * rect.Size.ToVector2();
+
             return poly;
         }
 
@@ -145,27 +148,6 @@ namespace ZeldaLike.GameUtility.Collisions
         {
             A = a;
             B = b;
-        }
-
-        public bool Owned(Vector2 pt)
-        {
-            Vector2 vd = B - A;
-            Vector2 vd2 = pt - A;
-            if(Vector2.Normalize(vd) == Vector2.Normalize(vd2) || Vector2.Normalize(vd) == -Vector2.Normalize(vd2))
-            {
-                return true;
-                if(Vector2.Dot(vd, vd2) >= 0)
-                {
-                    if(vd2.Length() <= vd.Length())
-                    { return true; }
-                    else
-                    { return false; }
-                }
-                else
-                { return false; }
-            }
-            else
-            { return false; }
         }
 
         public bool Intersect(Segment other)

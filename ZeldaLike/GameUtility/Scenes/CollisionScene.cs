@@ -11,12 +11,12 @@ namespace ZeldaLike.GameUtility.Scenes
 {
     public class CollisionScene : Scene
     {
-        public Collisions.Polygon polygon = Collisions.Polygon.RectToPolygons(new Rectangle(50, 25, 100, 100), 0, Vector2.One * 0.5F);
+        public Collisions.Polygon polygon = Collisions.Polygon.RectToPolygons(new Rectangle(50, 25, 100, 100), 0, Vector2.One * 0.25F);
         public Collisions.Polygon polygon2 = Collisions.Polygon.RectToPolygons(new Rectangle(200, 50, 100, 100), 0.1F, Vector2.One * 0.5F);
-        public Collisions.Polygon poly = new Collisions.Polygon(new List<Vector2>() { new Vector2(50, 50), new Vector2(50, 100) });
+        //public Collisions.Polygon poly = new Collisions.Polygon(new List<Vector2>() { new Vector2(50, 50), new Vector2(50, 100) });
 
-        public Collisions.Segment segm1 = new Collisions.Segment(new Vector2(25, 50), new Vector2(100, 100));
-        public Collisions.Segment segm2 = new Collisions.Segment(new Vector2(25, 75), new Vector2(75, 100));
+        /*public Collisions.Segment segm1 = new Collisions.Segment(new Vector2(25, 50), new Vector2(100, 100));
+        public Collisions.Segment segm2 = new Collisions.Segment(new Vector2(25, 75), new Vector2(75, 100));*/
 
         public CollisionScene()
         {
@@ -54,7 +54,8 @@ namespace ZeldaLike.GameUtility.Scenes
             base.Update(keyboard, mouse, gt);
             Vector2 pos = mouse.Position.ToVector2();
 
-            polygon2.Translate(pos - oldPos);
+            polygon.position = mouse.Position.ToVector2();
+            polygon.angle = mouse.ScrollWheelValue * 0.001F;
 
             oldPos = pos;
 
