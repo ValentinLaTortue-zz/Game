@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Imaginaires;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,71 @@ namespace ZeldaLike.GameUtility.Collisions
 {
     public class Polygon : GameElement
     {
-        public List<Vector2> points = new List<Vector2>();
+        Vector2 _position;
+        public Vector2 position {
+            set {
+                _position = value;
+                ResetWorldPoint();
+            }
+            get { return _position; }
+        }
+        float _angle;
+        public float angle
+        {
+            set
+            {
+                _angle = value;
+                ResetWorldPoint();
+            }
+            get { return _angle; }
+        }
+
+        void ResetWorldPoint()
+        {
+            _worldPosition = null;
+            _segments = null;
+            _relativePosition = null;
+        }
+
+        List<Vector2> initRelPos;
+        List<Vector2> _relativePosition;
+        public List<Vector2> relativePosition {
+            get
+            {
+                if(_relativePosition == null)
+                {
+                    _relativePosition = new List<Vector2>();
+                    foreach (var relPos in initRelPos)
+                    {
+                        var posComp = new Complex(relPos.X, relPos.Y);
+                        posComp *= new Complex(1, angle, false);
+
+                        _relativePosition.Add(new Vector2((float)posComp.Re, (float)posComp.Im));
+                    }
+                }
+                return _relativePosition;
+            }
+        }
+        List<Vector2> _worldPosition;
+
+        public List<Vector2> worldPosition { get
+            {
+                if (_worldPosition == null) { 
+                    _worldPosition = new List<Vector2>();
+                    foreach(var relPos in relativePosition)
+                    {
+                        _worldPosition.Add(position + relPos);
+                    }
+                }
+                return _worldPosition;
+            }
+        }
+
         List<Segment> _segments;
 
-        public Polygon(List<Vector2> points)
+        public Polygon(List<Vector2> relativePointsPosition)
         {
-            this.points = points;
+            initRelPos = relativePointsPosition;
         }
 
         public List<Segment> segments
@@ -27,6 +87,7 @@ namespace ZeldaLike.GameUtility.Collisions
                 else
                 {
                     List<Segment> segm = new List<Segment>();
+                    List<Vector2> points = worldPosition;
                     for (int i = 0; i < points.Count - 1; i++)
                     {
                         var seg = new Segment(points[i], points[i + 1]);
@@ -46,36 +107,19 @@ namespace ZeldaLike.GameUtility.Collisions
 
             List<Vector2> points = new List<Vector2>();
             List<Vector2> pointsFinal = new List<Vector2>();
-            points.Add(rect.Location.ToVector2());
-            points.Add(rect.Location.ToVector2() + rect.Width * Vector2.UnitX);
-            points.Add(rect.Location.ToVector2() + rect.Width * Vector2.UnitX + rect.Height * Vector2.UnitY);
-            points.Add(rect.Location.ToVector2() + rect.Height * Vector2.UnitY);
-
-            foreach(var pt in points)
-            {
-                var rPt = pt - pivotPT;
-                Imaginaires.Complex Zpt = new Imaginaires.Complex(rPt.X, rPt.Y);
-                Zpt *= new Imaginaires.Complex(1, Angle, false);
-                rPt = new Vector2((float)Zpt.Re, (float)Zpt.Im);
-                pointsFinal.Add(pivotPT + rPt);
-            }
-            return new Polygon(pointsFinal);
+            points.Add(rect.Location.ToVector2() - pivot);
+            points.Add(rect.Location.ToVector2() + rect.Width * Vector2.UnitX - pivot);
+            points.Add(rect.Location.ToVector2() + rect.Width * Vector2.UnitX + rect.Height * Vector2.UnitY - pivot);
+            points.Add(rect.Location.ToVector2() + rect.Height * Vector2.UnitY - pivot);
+            var poly = new Polygon(pointsFinal);
+            poly.angle = Angle;
+            return poly;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (var seg in segments)
                 seg.Draw(spriteBatch);
-        }
-
-
-        public void Translate(Vector2 vect)
-        {
-            for(int i = 0; i < points.Count; i++)
-            {
-                points[i] += vect;
-            }
-            _segments = null;
         }
 
         public bool Intersect(Polygon poly)
