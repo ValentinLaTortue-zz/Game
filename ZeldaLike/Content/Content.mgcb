@@ -25,8 +25,8 @@
 /processorParam:TextureFormat=Color
 /build:Pixel.png
 
-#begin Player/skin1/animations.xml
-/copy:Player/skin1/animations.xml;Player/skin1/anims.xml
+#begin Player/skin1/anims.xml
+/copy:Player/skin1/anims.xml
 
 #begin Player/skin1/collisionsSword.png
 /importer:TextureImporter

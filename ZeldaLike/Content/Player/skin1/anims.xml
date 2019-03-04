@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Animations>
+    <animation name="walkRight">
+        <frame n="6" />
+        <frame n="7" />
+    </animation>
+    <animation name="walkLeft">
+        <frame n="0" />
+        <frame n="1" />
+    </animation>
+    <animation name="walkUp">
+        <frame n="4" />
+        <frame n="5" />
+    </animation>
+    <animation name="walkDown">
+        <frame n="2" />
+        <frame n="3" />
+    </animation>
+    <animation name="sliceRight">
+        <frame n="8" />
+        <frame n="9" />
+        <frame n="10" />
+    </animation>
+    <animation name="sliceLeft">
+        <frame n="11" />
+        <frame n="12" />
+        <frame n="13" />
+    </animation>
+    <animation name="sliceDown">
+        <frame n="14" />
+        <frame n="15" />
+        <frame n="16" />
+    </animation>
+    <animation name="sliceUp">
+        <frame n="17" />
+        <frame n="18" />
+        <frame n="19" />
+    </animation>
+</Animations>
