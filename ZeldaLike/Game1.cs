@@ -20,7 +20,7 @@ namespace ZeldaLike
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            scene = new GameUtility.Scenes.testScene();
+            scene = new GameUtility.Scenes.CollisionScene();
         }
 
         /// <summary>

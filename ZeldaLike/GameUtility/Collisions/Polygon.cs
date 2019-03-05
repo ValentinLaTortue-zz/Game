@@ -73,10 +73,12 @@ namespace ZeldaLike.GameUtility.Collisions
 
         List<Segment> _segments;
 
-        public Polygon(List<Vector2> relativePointsPosition)
+        public Polygon(List<Vector2> relativePointsPosition, Vector2 position, float angle)
         {
             Console.WriteLine(relativePointsPosition.Count);
             initRelPos = relativePointsPosition;
+            this.position = position;
+            this.angle = angle;
         }
 
         public List<Segment> segments
@@ -109,12 +111,11 @@ namespace ZeldaLike.GameUtility.Collisions
             List<Vector2> points = new List<Vector2>();
 
             points.Add(-pivot * rect.Size.ToVector2());
-            points.Add(-pivot * rect.Size.ToVector2() + rect.Width * Vector2.UnitX);
-            points.Add(-pivot * rect.Size.ToVector2() + rect.Height * Vector2.UnitY);
+            points.Add(points[0] + rect.Width * Vector2.UnitX);
+            points.Add(points[0] + rect.Size.ToVector2());
+            points.Add(points[0] + rect.Height * Vector2.UnitY);
             
-            var poly = new Polygon(points);
-            poly.angle = Angle;
-            poly.position = rect.Location.ToVector2() + 0.5F * rect.Size.ToVector2();
+            var poly = new Polygon(points, rect.Location.ToVector2(), 0);
 
             return poly;
         }
@@ -123,6 +124,7 @@ namespace ZeldaLike.GameUtility.Collisions
         {
             foreach (var seg in segments)
                 seg.Draw(spriteBatch);
+            spriteBatch.Draw(Resources.pixel, new Rectangle((position - Vector2.One * 5).ToPoint(), new Point(10, 10)), Color.Yellow);
         }
 
         public bool Intersect(Polygon poly)
